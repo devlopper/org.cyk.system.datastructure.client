@@ -19,6 +19,30 @@
 			<groupId>org.cyk.system.datastructure.client.controller.impl</groupId>
 			<artifactId>datastructure-client-controller-impl</artifactId>
 			<version>0.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>
+						org.cyk.jee.utility.server.persistence
+					</groupId>
+					<artifactId>
+						jee-utility-server-persistence
+					</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.cyk.pom.jee.client.controller.web.jsf.primefaces.main.jboss.swarm</groupId>
+			<artifactId>pom-jee-client-controller-web-jsf-primefaces-main-jboss-swarm</artifactId>
+			<version>0.0.1</version>
+			<type>pom</type>
+		</dependency>
+		
+		<!-- Need to be redeclare here to enable detection of primefaces. WHY ??? -->
+		<dependency>
+			<groupId>org.cyk.jee.utility.client.controller.web.jsf.primefaces</groupId>
+			<artifactId>jee-utility-client-controller-web-jsf-primefaces</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 	</dependencies>		
 

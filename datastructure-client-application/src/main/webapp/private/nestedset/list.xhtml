@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+	
+    <h:head>
+        <title>List</title>
+    </h:head>
+    <h:body>
+    	Hello : #{nestedSetListPage} - #{nestedSetListPage.nestedSets}
+    	<h:form>
+    	   <p:dataTable value="#{nestedSetListPage.nestedSets}" var="nestedSet" >
+	    	   	<p:column headerText="Group"><h:outputText value="#{nestedSet.group}" /></p:column>
+	    	   	<p:column headerText="Parent"><h:outputText value="#{nestedSet.parent}" /></p:column>
+	    	   	<p:column headerText="Code"><h:outputText value="#{nestedSet.code}" /></p:column>
+	    	   	<p:column headerText="Left"><h:outputText value="#{nestedSet.leftIndex}" /></p:column>
+	    	   	<p:column headerText="Right"><h:outputText value="#{nestedSet.rightIndex}" /></p:column>
+	    	   	<p:column headerText="Child"><h:outputText value="#{nestedSet.numberOfChildren}" /></p:column>
+	    	   	<p:column headerText="Asc"><h:outputText value="#{nestedSet.numberOfAscendant}" /></p:column>
+	    	   	<p:column headerText="Desc"><h:outputText value="#{nestedSet.numberOfDescendant}" /></p:column>
+    	   </p:dataTable>
+    	</h:form>
+    </h:body>
+</html>

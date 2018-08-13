@@ -17,7 +17,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.cyk.system.datastructure.server.representation</groupId>
-			<artifactId>datastructure-server-representation-entities</artifactId>
+			<artifactId>datastructure-server-representation-api</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 	</dependencies>		

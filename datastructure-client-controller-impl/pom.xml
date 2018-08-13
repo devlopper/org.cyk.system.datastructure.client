@@ -16,6 +16,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.cyk.jee.utility.client.controller.web.jsf.primefaces</groupId>
+			<artifactId>jee-utility-client-controller-web-jsf-primefaces</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.cyk.system.datastructure.client.controller.api</groupId>
 			<artifactId>datastructure-client-controller-api</artifactId>
 			<version>0.0.1</version>

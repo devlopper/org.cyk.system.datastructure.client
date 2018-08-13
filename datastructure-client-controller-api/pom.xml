@@ -20,12 +20,6 @@
 			<artifactId>datastructure-client-controller-entities</artifactId>
 			<version>0.0.1</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.cyk.system.datastructure.server.representation</groupId>
-			<artifactId>datastructure-server-representation-api</artifactId>
-			<version>0.0.1</version>
-		</dependency>
 	</dependencies>		
 
 </project>
