@@ -19,16 +19,6 @@
 			<groupId>org.cyk.system.datastructure.client.controller.impl</groupId>
 			<artifactId>datastructure-client-controller-impl</artifactId>
 			<version>0.0.1</version>
-			<exclusions>
-				<exclusion>
-					<groupId>
-						org.cyk.jee.utility.server.persistence
-					</groupId>
-					<artifactId>
-						jee-utility-server-persistence
-					</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<dependency>

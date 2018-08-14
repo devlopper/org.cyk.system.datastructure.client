@@ -22,7 +22,7 @@ public class NestedSetEditPage implements Serializable {
 		
 	public void create() {
 		ResteasyClient client = new ResteasyClientBuilder().build();
-		ResteasyWebTarget target = client.target(UriBuilder.fromPath("localhost:8081"));
+		ResteasyWebTarget target = client.target(UriBuilder.fromPath("http://localhost:8081"));
 		NestedSetRepresentation nestedSetRepresentation = target.proxy(NestedSetRepresentation.class);
 		org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSet dto = 
 				new org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSet();

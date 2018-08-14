@@ -2,11 +2,12 @@ package org.cyk.system.datastructure.client.application.collection.set.nestedset
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.cyk.system.datastructure.server.representation.api.collection.set.nested.NestedSetRepresentation;
@@ -20,21 +21,15 @@ public class NestedSetListPage implements Serializable {
 
 	private List<NestedSet> nestedSets;
 	
-	@PostConstruct
-	private void lp(){
-		System.out.println("NestedSetListPage.lp()");
-	}
-	
 	public List<NestedSet> getNestedSets() {
-		System.out.println("NestedSetListPage.getNestedSets()");
 		if(nestedSets == null){
 			nestedSets = new ArrayList<>();
 			ResteasyClient client = new ResteasyClientBuilder().build();
-			ResteasyWebTarget target = client.target(UriBuilder.fromPath("localhost:8081"));
+			ResteasyWebTarget target = client.target(UriBuilder.fromPath("http://localhost:8081"));
+			
 			NestedSetRepresentation nestedSetRepresentation = target.proxy(NestedSetRepresentation.class);
-			System.out.println("LIST : "+nestedSetRepresentation.getMany());
-			System.out.println("COUNT : "+nestedSetRepresentation.count());
-			for(org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSet index : nestedSetRepresentation.getMany()){
+			for(org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSet index : 
+				nestedSetRepresentation.getMany().readEntity(new GenericType<Collection<org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSet>>(){})){
 				NestedSet nestedSet = new NestedSet();
 				nestedSet.setCode(index.getCode());
 				nestedSet.setParent(index.getParent());
