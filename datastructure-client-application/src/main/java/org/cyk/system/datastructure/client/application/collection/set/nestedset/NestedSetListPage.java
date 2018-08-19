@@ -1,7 +1,6 @@
 package org.cyk.system.datastructure.client.application.collection.set.nestedset;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,6 +10,9 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.cyk.system.datastructure.server.representation.api.collection.set.nested.NestedSetRepresentation;
+import org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSetDto;
+import org.cyk.utility.__kernel__.DependencyInjection;
+import org.cyk.utility.instance.InstanceHelper;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
@@ -23,24 +25,12 @@ public class NestedSetListPage implements Serializable {
 	
 	public List<NestedSet> getNestedSets() {
 		if(nestedSets == null){
-			nestedSets = new ArrayList<>();
 			ResteasyClient client = new ResteasyClientBuilder().build();
 			ResteasyWebTarget target = client.target(UriBuilder.fromPath("http://localhost:8081"));
 			
 			NestedSetRepresentation nestedSetRepresentation = target.proxy(NestedSetRepresentation.class);
-			for(org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSet index : 
-				nestedSetRepresentation.getMany().readEntity(new GenericType<Collection<org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSet>>(){})){
-				NestedSet nestedSet = new NestedSet();
-				nestedSet.setCode(index.getCode());
-				nestedSet.setParent(index.getParent());
-				nestedSet.setGroup(index.getGroup());
-				nestedSet.setLeftIndex(index.getLeftIndex());
-				nestedSet.setRightIndex(index.getRightIndex());
-				nestedSet.setNumberOfAscendant(index.getNumberOfAscendant());
-				nestedSet.setNumberOfChildren(index.getNumberOfChildren());
-				nestedSet.setNumberOfDescendant(index.getNumberOfDescendant());
-				nestedSets.add(nestedSet);
-			}
+			Collection<NestedSetDto> dtos = nestedSetRepresentation.getMany().readEntity(new GenericType<Collection<NestedSetDto>>(){});
+			nestedSets = (List<NestedSet>) DependencyInjection.inject(InstanceHelper.class).buildMany(NestedSet.class, dtos);
 		}
 		return nestedSets;
 	}

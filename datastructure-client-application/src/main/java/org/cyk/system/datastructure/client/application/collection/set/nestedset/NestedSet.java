@@ -4,9 +4,8 @@ import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
-@Getter @Setter @Accessors(chain=true)
+@Getter @Setter
 public class NestedSet implements Serializable {
 
 	private static final long serialVersionUID = 1L;

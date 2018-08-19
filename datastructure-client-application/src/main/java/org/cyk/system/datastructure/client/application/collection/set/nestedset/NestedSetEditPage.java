@@ -7,6 +7,9 @@ import javax.inject.Named;
 import javax.ws.rs.core.UriBuilder;
 
 import org.cyk.system.datastructure.server.representation.api.collection.set.nested.NestedSetRepresentation;
+import org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSetDto;
+import org.cyk.utility.__kernel__.DependencyInjection;
+import org.cyk.utility.instance.InstanceHelper;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
@@ -24,11 +27,6 @@ public class NestedSetEditPage implements Serializable {
 		ResteasyClient client = new ResteasyClientBuilder().build();
 		ResteasyWebTarget target = client.target(UriBuilder.fromPath("http://localhost:8081"));
 		NestedSetRepresentation nestedSetRepresentation = target.proxy(NestedSetRepresentation.class);
-		org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSet dto = 
-				new org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSet();
-		dto.setCode(nestedSet.getCode());
-		dto.setGroup(nestedSet.getGroup());
-		dto.setParent(nestedSet.getParent());
-		nestedSetRepresentation.createOne(dto);
+		nestedSetRepresentation.createOne(DependencyInjection.inject(InstanceHelper.class).buildOne(NestedSetDto.class, nestedSet));
 	}
 }
