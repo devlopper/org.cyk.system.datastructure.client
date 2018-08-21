@@ -1,0 +1,9 @@
+swarm:
+  http:
+    port: 8082
+org:
+  cyk:
+    system:
+      datastructure:
+        server:
+          uri: http://localhost:8081
