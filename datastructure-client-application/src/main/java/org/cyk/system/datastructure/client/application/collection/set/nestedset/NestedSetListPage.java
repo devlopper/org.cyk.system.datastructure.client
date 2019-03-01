@@ -8,9 +8,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.ws.rs.core.Response;
 
-import org.cyk.jee.utility.client.controller.web.jsf.primefaces.AbstractPageImpl;
 import org.cyk.system.datastructure.server.representation.api.collection.set.nested.NestedSetRepresentation;
 import org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSetDto;
+import org.cyk.utility.client.controller.web.jsf.primefaces.AbstractPageImpl;
 
 @Named @RequestScoped
 public class NestedSetListPage extends AbstractPageImpl implements Serializable {

@@ -5,9 +5,9 @@ import java.io.Serializable;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.cyk.jee.utility.client.controller.web.jsf.primefaces.AbstractPageImpl;
 import org.cyk.system.datastructure.server.representation.api.collection.set.nested.NestedSetRepresentation;
 import org.cyk.system.datastructure.server.representation.entities.collection.set.nested.NestedSetDto;
+import org.cyk.utility.client.controller.web.jsf.primefaces.AbstractPageImpl;
 
 import lombok.Getter;
 import lombok.Setter;
