@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.cyk.pom.jee.client.jboss.swarm</groupId>
-		<artifactId>pom-jee-client-jboss-swarm</artifactId>
-		<version>pom.jee.client.jboss.swarm.0.0.1</version>
+		<groupId>org.cyk.pom.jee.client</groupId>
+		<artifactId>pom-jee-client</artifactId>
+		<version>pom.jee.client.0.0.1</version>
 	</parent>
 
 	<groupId>org.cyk.system.datastructure.client</groupId>
@@ -21,9 +21,6 @@
 		<module>../datastructure-client-controller-entities</module>
 		<module>../datastructure-client-controller-api</module>
 		<module>../datastructure-client-controller-impl</module>
-		
-		<!-- Application Layer -->
-		<module>../datastructure-client-application</module>
 				
 	</modules>
 
