@@ -20,8 +20,8 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.cyk.system.datastructure.server.representation</groupId>
-			<artifactId>datastructure-server-representation-impl</artifactId>
+			<groupId>org.cyk.system.datastructure.client.controller.impl</groupId>
+			<artifactId>datastructure-client-controller-impl</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 	</dependencies>	
