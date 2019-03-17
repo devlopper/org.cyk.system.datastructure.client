@@ -4,189 +4,83 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
+import javax.faces.bean.SessionScoped;
 
 import org.cyk.system.datastructure.client.controller.api.collection.set.nested.NestedSetController;
 import org.cyk.system.datastructure.client.controller.entities.collection.set.nested.NestedSet;
 import org.cyk.utility.__kernel__.DependencyInjection;
+import org.cyk.utility.__kernel__.object.dynamic.AbstractObject;
 import org.cyk.utility.__kernel__.properties.Properties;
-import org.primefaces.component.organigram.OrganigramHelper;
-import org.primefaces.event.organigram.OrganigramNodeCollapseEvent;
+import org.cyk.utility.client.controller.component.tree.Tree;
+import org.cyk.utility.client.controller.component.tree.TreeBuilder;
+import org.cyk.utility.client.controller.event.Event;
+import org.cyk.utility.client.controller.event.EventName;
+import org.cyk.utility.client.controller.web.jsf.primefaces.component.OrganigramNodeBuilder;
+import org.cyk.utility.hierarchy.HierarchyNode;
+import org.cyk.utility.hierarchy.HierarchyNodeData;
 import org.primefaces.event.organigram.OrganigramNodeDragDropEvent;
-import org.primefaces.event.organigram.OrganigramNodeExpandEvent;
-import org.primefaces.event.organigram.OrganigramNodeSelectEvent;
-import org.primefaces.model.DefaultOrganigramNode;
 import org.primefaces.model.OrganigramNode;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @ManagedBean
-@ViewScoped
-public class OrganigramView implements Serializable {
+//@ViewScoped
+@SessionScoped
+public class OrganigramView extends AbstractObject implements Serializable {
  
 	private static final long serialVersionUID = 1L;
 
-	private OrganigramNode rootNode;
-    private OrganigramNode selection;
- 
-    private boolean zoom = false;
-    private String style = "width: 1200px";
-    private int leafNodeConnectorHeight = 0;
-    private boolean autoScrollToSelection = false;
- 
-    private String employeeName;
+	 @Getter @Setter private Tree tree;
  
     @PostConstruct
-    public void init() {
-        selection = new DefaultOrganigramNode(null, "Ridvan Agar", null);
-        
-        Collection<NestedSet> nestedSets = DependencyInjection.inject(NestedSetController.class).read();
-        
-        for(NestedSet index : nestedSets) {
-        	if(index.getParent() == null) {
-        		rootNode = new DefaultOrganigramNode(index.getCode(), null);
-        	    rootNode.setCollapsible(false);
-        	    rootNode.setDroppable(true);
-        	    rootNode.setRowKey(index.getCode());
-        	    build(index, rootNode, nestedSets, 1);
-        	}
-        }
+    public void init() { 
+        initTree();
     }
     
-    private void build(NestedSet parent,OrganigramNode node,Collection<NestedSet> nestedSets,Integer level) {
+    public void initTree() { 
+        Collection<NestedSet> nestedSets = DependencyInjection.inject(NestedSetController.class).read();        
+        HierarchyNode hierarchyNode = null;               
+        for(NestedSet index : nestedSets) {
+        	if(index.getParent() == null) {
+        		hierarchyNode = __inject__(HierarchyNode.class).setData(index);
+        		hierarchyNode.setIsCollapsible(Boolean.FALSE); 
+        	    build(hierarchyNode, nestedSets, 1);
+        	}
+        }
+        
+        OrganigramNode rootNode = __inject__(OrganigramNodeBuilder.class).setHierarchyNode(hierarchyNode).execute().getOutput();
+        
+        tree = __inject__(TreeBuilder.class)
+        	.addEvent(EventName.DRAG_DROP, new Runnable() {
+    			@Override
+    			public void run() {
+    				OrganigramNodeDragDropEvent event =  null;
+    				for(Event index : tree.getEvents().get())
+    					if(index.getName().equals(EventName.DRAG_DROP)) {
+    						event = (OrganigramNodeDragDropEvent) index.getFunction().getProperties().getParameter();
+    					}
+    				NestedSet nestedSet = (NestedSet) ((HierarchyNodeData)event.getOrganigramNode().getData()).getValue();
+    		        NestedSet parent = DependencyInjection.inject(NestedSetController.class).readOneByBusinessIdentifier(
+    		        		((NestedSet) ((HierarchyNodeData)event.getTargetOrganigramNode().getData()).getValue()).getCode()
+    		        		);
+    		        
+    		        nestedSet.getParent().setCode(parent.getCode());
+    		        DependencyInjection.inject(NestedSetController.class).update(nestedSet, new Properties().setFields("parent"));
+    		        
+    		        initTree();
+    			}
+    		})
+        	.execute().getOutput();
+         
+        tree.getProperties().setRoot(rootNode);
+    }
+    
+    private void build(HierarchyNode parent,Collection<NestedSet> nestedSets,Integer level) {
     	for(NestedSet index : nestedSets)
-    		if(index.getParent()!=null && index.getParent().getCode().equals(parent.getCode())) {
-    			 OrganigramNode childNode = new DefaultOrganigramNode(index.getCode(), node);
-    			 childNode.setDroppable(true);
-    			 childNode.setDraggable(true);
-    			 childNode.setSelectable(true);
-    			 childNode.setRowKey(index.getCode());
-    			 build(index, childNode, nestedSets, level + 1);
-    		}
+    		if(index.getParent()!=null && index.getParent().getCode().equals( ((NestedSet)parent.getData().getValue()).getCode()))
+    			build(parent.addNode(index).getLastChild(), nestedSets, level + 1);
     }
  
-    public void nodeDragDropListener(OrganigramNodeDragDropEvent event) {
-    	System.out.println("OrganigramView.nodeDragDropListener()");
-        FacesMessage message = new FacesMessage();
-        message.setSummary("Node '" + event.getOrganigramNode().getData() + "' moved from " + event.getSourceOrganigramNode().getData() + " to '" + event.getTargetOrganigramNode().getData() + "'");
-        message.setSeverity(FacesMessage.SEVERITY_INFO);
-        //NestedSet nestedSet = (NestedSet) event.getOrganigramNode().getData();
-        //NestedSet parent = (NestedSet) event.getTargetOrganigramNode().getData();
-        
-        NestedSet nestedSet = DependencyInjection.inject(NestedSetController.class).readOneByBusinessIdentifier(event.getOrganigramNode().getData());
-        NestedSet parent = DependencyInjection.inject(NestedSetController.class).readOneByBusinessIdentifier(event.getTargetOrganigramNode().getData());
-        
-        nestedSet.getParent().setCode(parent.getCode());
-        DependencyInjection.inject(NestedSetController.class).update(nestedSet, new Properties().setFields("parent"));
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
- 
-    public void nodeSelectListener(OrganigramNodeSelectEvent event) {
-        FacesMessage message = new FacesMessage();
-        message.setSummary("Node '" + event.getOrganigramNode().getData() + "' selected.");
-        message.setSeverity(FacesMessage.SEVERITY_INFO);
- 
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
- 
-    public void nodeCollapseListener(OrganigramNodeCollapseEvent event) {
-        FacesMessage message = new FacesMessage();
-        message.setSummary("Node '" + event.getOrganigramNode().getData() + "' collapsed.");
-        message.setSeverity(FacesMessage.SEVERITY_INFO);
- 
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
- 
-    public void nodeExpandListener(OrganigramNodeExpandEvent event) {
-        FacesMessage message = new FacesMessage();
-        message.setSummary("Node '" + event.getOrganigramNode().getData() + "' expanded.");
-        message.setSeverity(FacesMessage.SEVERITY_INFO);
- 
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
- 
-    public void removeDivision() {
-        // re-evaluate selection - might be a differenct object instance if viewstate serialization is enabled
-        OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-        setMessage(currentSelection.getData() + " will entfernt werden.", FacesMessage.SEVERITY_INFO);
-    }
- 
-    public void removeEmployee() {
-        // re-evaluate selection - might be a differenct object instance if viewstate serialization is enabled
-        OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-        currentSelection.getParent().getChildren().remove(currentSelection);
-    }
- 
-    public void addEmployee() {
-        // re-evaluate selection - might be a differenct object instance if viewstate serialization is enabled
-        OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
- 
-        OrganigramNode employee = new DefaultOrganigramNode("employee", employeeName, currentSelection);
-        employee.setDraggable(true);
-        employee.setSelectable(true);
-    }
- 
-    private void setMessage(String msg, FacesMessage.Severity severity) {
-        FacesMessage message = new FacesMessage();
-        message.setSummary(msg);
-        message.setSeverity(severity);
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
- 
-    public OrganigramNode getRootNode() {
-        return rootNode;
-    }
- 
-    public void setRootNode(OrganigramNode rootNode) {
-        this.rootNode = rootNode;
-    }
- 
-    public OrganigramNode getSelection() {
-        return selection;
-    }
- 
-    public void setSelection(OrganigramNode selection) {
-        this.selection = selection;
-    }
- 
-    public boolean isZoom() {
-        return zoom;
-    }
- 
-    public void setZoom(boolean zoom) {
-        this.zoom = zoom;
-    }
- 
-    public String getEmployeeName() {
-        return employeeName;
-    }
- 
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
-    }
- 
-    public String getStyle() {
-        return style;
-    }
- 
-    public void setStyle(String style) {
-        this.style = style;
-    }
- 
-    public int getLeafNodeConnectorHeight() {
-        return leafNodeConnectorHeight;
-    }
- 
-    public void setLeafNodeConnectorHeight(int leafNodeConnectorHeight) {
-        this.leafNodeConnectorHeight = leafNodeConnectorHeight;
-    }
- 
-    public boolean isAutoScrollToSelection() {
-        return autoScrollToSelection;
-    }
- 
-    public void setAutoScrollToSelection(boolean autoScrollToSelection) {
-        this.autoScrollToSelection = autoScrollToSelection;
-    }
 }
