@@ -18,7 +18,7 @@ public class NestedSetControllerFunctionIntegrationTest extends AbstractControll
 	
 	@Test
 	public void createOneNestedSet() throws Exception{
-		__inject__(FunctionRunnableMap.class).set(ProxyClassUniformResourceIdentifierStringProviderImpl.class, ProxyClassUniformResourceIdentifierStringProviderFunctionRunnableImpl.class,100);
+		__inject__(FunctionRunnableMap.class).set(ProxyClassUniformResourceIdentifierStringProviderImpl.class, ProxyClassUniformResourceIdentifierStringProviderFunctionRunnableImpl.class,1000);
 		
 		String nestedSetCode = __getRandomCode__();
 		NestedSet nestedSet = __inject__(NestedSet.class).setIdentifier(nestedSetCode);
