@@ -58,10 +58,10 @@ public class OrganigramPage extends AbstractPageContainerManagedImpl implements 
     				
     				NestedSet nestedSet = (NestedSet) ((HierarchyNodeData)event.getOrganigramNode().getData()).getValue();
     		        NestedSet parent = DependencyInjection.inject(NestedSetController.class).readOneByBusinessIdentifier(
-    		        		((NestedSet) ((HierarchyNodeData)event.getTargetOrganigramNode().getData()).getValue()).getCode()
+    		        		((NestedSet) ((HierarchyNodeData)event.getTargetOrganigramNode().getData()).getValue()).getIdentifier()
     		        		);
     		        
-    		        nestedSet.getParent().setCode(parent.getCode());
+    		        nestedSet.getParent().setIdentifier(parent.getIdentifier());
     		        DependencyInjection.inject(NestedSetController.class).update(nestedSet, new Properties().setFields("parent"));
     			}
     		})
@@ -95,7 +95,7 @@ public class OrganigramPage extends AbstractPageContainerManagedImpl implements 
 					
 					@Override
 					public void run() {
-						NestedSet data = (NestedSet) __inject__(NestedSet.class).setCode(code).setParent((NestedSet) tree.getSelectedNodeDataValue());
+						NestedSet data = (NestedSet) __inject__(NestedSet.class).setIdentifier(code).setParent((NestedSet) tree.getSelectedNodeDataValue());
 				        __inject__(NestedSetController.class).create(data);
 				        tree.addData(data);
 				        code = null;	
@@ -115,7 +115,7 @@ public class OrganigramPage extends AbstractPageContainerManagedImpl implements 
 	
     private void build(HierarchyNode parent,Collection<NestedSet> nestedSets,Integer level) {
     	for(NestedSet index : nestedSets)
-    		if(index.getParent()!=null && index.getParent().getCode().equals( ((NestedSet)parent.getData().getValue()).getCode()))
+    		if(index.getParent()!=null && index.getParent().getIdentifier().equals( ((NestedSet)parent.getData().getValue()).getIdentifier()))
     			build(parent.addNode(index).getLastChild(), nestedSets, level + 1);
     }
  

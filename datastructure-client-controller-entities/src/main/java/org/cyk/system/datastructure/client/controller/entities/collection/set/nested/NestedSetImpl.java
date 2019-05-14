@@ -6,9 +6,9 @@ import org.cyk.utility.client.controller.component.annotation.Input;
 import org.cyk.utility.client.controller.component.annotation.InputChoice;
 import org.cyk.utility.client.controller.component.annotation.InputChoiceOne;
 import org.cyk.utility.client.controller.component.annotation.InputChoiceOneCombo;
-import org.cyk.utility.client.controller.data.AbstractDataImpl;
+import org.cyk.utility.client.controller.data.AbstractDataIdentifiedByStringImpl;
 
-public class NestedSetImpl extends AbstractDataImpl implements NestedSet,Serializable {
+public class NestedSetImpl extends AbstractDataIdentifiedByStringImpl implements NestedSet,Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Input @InputChoice @InputChoiceOne @InputChoiceOneCombo
@@ -26,8 +26,8 @@ public class NestedSetImpl extends AbstractDataImpl implements NestedSet,Seriali
 	}
 	
 	@Override
-	public NestedSet setCode(String code) {
-		return (NestedSet) super.setCode(code);
+	public NestedSet setIdentifier(Object identifier) {
+		return (NestedSet) super.setIdentifier(identifier);
 	}
 	
 }

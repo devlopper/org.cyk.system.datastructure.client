@@ -1,13 +1,13 @@
 package org.cyk.system.datastructure.client.controller.entities.collection.set.nested;
 
-import org.cyk.utility.client.controller.data.Data;
+import org.cyk.utility.client.controller.data.DataIdentifiedByString;
 
-public interface NestedSet extends Data {
+public interface NestedSet extends DataIdentifiedByString {
 
 	NestedSet getParent();
 	NestedSet setParent(NestedSet parent);
 	
-	@Override NestedSet setCode(String code);
+	@Override NestedSet setIdentifier(Object identifier);
 	
 	String PROPERTY_PARENT = "parent";
 }
